@@ -5,71 +5,174 @@
 <title>BP Discord — Accueil</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", sans-serif;
-        background: #1e1f22;
-        color: #fff;
-    }
-    header {
-        background: #2b2d31;
-        padding: 20px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: 700;
-        color: #fff;
-        border-bottom: 1px solid #3a3c41;
-    }
-    .container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 20px;
-    }
-    .card {
-        background: #2b2d31;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        border: 1px solid #3a3c41;
-    }
-    .card h2 {
-        margin: 0 0 10px;
-        font-size: 22px;
-    }
-    .btn {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 10px 18px;
-        background: #5865f2;
-        color: #fff;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-    }
-    .btn:hover {
-        background: #4752c4;
-    }
+/* VARIABLES */
+:root {
+  --bg: #f2f3f5;
+  --bg-alt: #ffffff;
+  --text: #060607;
+  --text-soft: #4f5660;
+  --accent: #5865f2;
+  --accent-soft: #eef0ff;
+  --border: #d4d7dc;
+  --radius: 18px;
+  --shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1e1f22;
+    --bg-alt: #313338;
+    --text: #f2f3f5;
+    --text-soft: #b5bac1;
+    --accent: #5865f2;
+    --accent-soft: rgba(88,101,242,0.12);
+    --border: #3f4147;
+    --shadow: 0 18px 40px rgba(0,0,0,0.6);
+  }
+}
+
+/* GLOBAL */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, var(--bg-alt) 0, var(--bg) 55%);
+  color: var(--text);
+}
+
+/* HEADER */
+header {
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(16px);
+  background: rgba(0,0,0,0.05);
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 12px 30px rgba(88,101,242,0.7);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(88,101,242,0.9);
+}
+
+/* HERO */
+.hero {
+  max-width: 1100px;
+  margin: 60px auto;
+  text-align: center;
+  animation: fadeUp 0.6s ease-out both;
+}
+
+.hero h1 {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.hero p {
+  font-size: 16px;
+  color: var(--text-soft);
+  max-width: 600px;
+  margin: 10px auto 20px;
+}
+
+/* CARDS */
+.cards {
+  max-width: 1100px;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+@media (max-width: 800px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--bg-alt);
+  padding: 24px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  animation: fadeUp 0.6s ease-out both;
+}
+
+.card h2 {
+  margin: 0 0 10px;
+}
+
+.card p {
+  color: var(--text-soft);
+}
+
+.card .btn {
+  margin-top: 14px;
+  display: inline-block;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
 
-<header>BP Discord — Multi‑Bot Panel</header>
+<header>
+  <div class="header-inner">
+    <div class="logo">BP Discord</div>
+    <a href="https://discord.gg/TcK65JDaaC" class="btn btn-primary">Serveur BlocPlay</a>
+  </div>
+</header>
 
-<div class="container">
+<section class="hero">
+  <h1>Bienvenue sur BP Discord</h1>
+  <p>Choisissez un bot pour accéder à sa présentation et à son panel complet.</p>
+</section>
 
-    <div class="card">
-        <h2>AdminBot</h2>
-        <p>Bot d'administration avancée : modération, gestion des salons, giveaways, configuration…</p>
-        <a class="btn" href="/adminbot">Voir la présentation</a>
-    </div>
+<section class="cards">
+  <div class="card">
+    <h2>AdminBot</h2>
+    <p>Bot d'administration avancée : modération, salons, giveaways, outils serveur…</p>
+    <a href="/adminbot" class="btn btn-primary">Voir le bot</a>
+  </div>
 
-    <div class="card">
-        <h2>BlocPlay</h2>
-        <p>Bot officiel de BlocPlay : systèmes internes, gestion du jeu, outils communautaires…</p>
-        <a class="btn" href="/blocplay">Voir la présentation</a>
-    </div>
-
-</div>
+  <div class="card">
+    <h2>BlocPlay</h2>
+    <p>Bot officiel du projet BlocPlay, avec systèmes internes et outils communautaires.</p>
+    <a href="/blocplay" class="btn btn-primary">Voir le bot</a>
+  </div>
+</section>
 
 </body>
 </html>
