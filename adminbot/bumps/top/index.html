@@ -44,32 +44,131 @@
       background: radial-gradient(circle at top, var(--bg-soft) 0, var(--bg) 55%);
       color: var(--text);
       min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.12), transparent 70%);
+      padding: 10px 0 6px;
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #ffffff, #5865f2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 10px 25px rgba(88, 101, 242, 0.7);
+    }
+
+    .brand-text-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 12px 30px rgba(88, 101, 242, 0.7);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(88, 101, 242, 0.9);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    /* PAGE */
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
       padding: 24px 16px 40px;
     }
 
     h1 {
-      text-align: center;
       font-size: 28px;
       font-weight: 800;
       margin-bottom: 20px;
+      text-align: center;
     }
 
-    .grid {
+    /* GRID */
+    .main-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 18px;
-      max-width: 1120px;
-      margin: 0 auto;
+      margin-top: 20px;
     }
 
+    /* CARD */
     .card {
       background: var(--bg-alt);
       border-radius: var(--card-radius);
       padding: 16px 18px 14px;
       border: 1px solid var(--border);
       box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
       animation: fadeUp 0.6s ease-out both;
     }
 
@@ -99,23 +198,9 @@
       color: var(--text-soft);
     }
 
-    .badge.gold {
-      border-color: gold;
-      color: gold;
-      background: rgba(255, 215, 0, 0.12);
-    }
-
-    .badge.silver {
-      border-color: silver;
-      color: silver;
-      background: rgba(192, 192, 192, 0.12);
-    }
-
-    .badge.bronze {
-      border-color: #cd7f32;
-      color: #cd7f32;
-      background: rgba(205, 127, 50, 0.12);
-    }
+    .gold { border-color: gold; color: gold; background: rgba(255, 215, 0, 0.12); }
+    .silver { border-color: silver; color: silver; background: rgba(192, 192, 192, 0.12); }
+    .bronze { border-color: #cd7f32; color: #cd7f32; background: rgba(205, 127, 50, 0.12); }
 
     .join-btn {
       display: inline-block;
@@ -135,13 +220,6 @@
       box-shadow: 0 12px 30px rgba(88, 101, 242, 0.7);
     }
 
-    .no-invite {
-      margin-top: 12px;
-      font-size: 12px;
-      color: var(--text-soft);
-      opacity: 0.7;
-    }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -151,60 +229,17 @@
 
 <body>
 
-  <h1>🏆 Top Bumps – AdminBot</h1>
+  <!-- HEADER IDENTIQUE AU DASHBOARD -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo">A</div>
+        <div>
+          <div class="brand-text-title">AdminBot Panel</div>
+          <div class="brand-text-sub">Gestion avancée de votre serveur Discord</div>
+        </div>
+      </div>
 
-  <div id="grid" class="grid">
-    <p style="text-align:center; opacity:0.7;">Chargement…</p>
-  </div>
-
-  <script>
-    const API_URL = "https://TON-PROJET.railway.app/api/top-bumps";
-
-    async function loadTop() {
-      const grid = document.getElementById("grid");
-
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-
-        grid.innerHTML = "";
-
-        data.forEach(server => {
-          const card = document.createElement("article");
-          card.className = "card";
-
-          let badgeClass = "";
-          if (server.position === 1) badgeClass = "gold";
-          if (server.position === 2) badgeClass = "silver";
-          if (server.position === 3) badgeClass = "bronze";
-
-          card.innerHTML = `
-            <div class="card-header">
-              <div>
-                <div class="card-title">${server.name}</div>
-                <div class="card-subtitle">#${server.position} · ${server.bumps} bumps</div>
-              </div>
-              <span class="badge ${badgeClass}">#${server.position}</span>
-            </div>
-
-            ${
-              server.invite
-                ? `<a href="${server.invite}" target="_blank" class="join-btn">Rejoindre</a>`
-                : `<div class="no-invite">Aucune invite disponible</div>`
-            }
-          `;
-
-          grid.appendChild(card);
-        });
-
-      } catch (err) {
-        grid.innerHTML = `<p style="text-align:center; opacity:0.7;">Impossible de charger les données.</p>`;
-      }
-    }
-
-    loadTop();
-    setInterval(loadTop, 30000);
-  </script>
-
-</body>
-</html>
+      <div class="header-actions">
+        <a class="btn btn-ghost" href="https://discord.gg/TcK65JDaaC" target="_blank">Serveur BlocPlay</a>
+        <a class="btn btn-primary" href="https://discord.com" target="_blank">—
