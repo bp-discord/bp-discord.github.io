@@ -1,147 +1,209 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
   <title>Top Bumps – AdminBot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
+    :root {
+      --bg: #f2f3f5;
+      --bg-alt: #ffffff;
+      --bg-soft: #e3e5e8;
+      --text: #060607;
+      --text-soft: #4f5660;
+      --accent: #5865f2;
+      --accent-soft: #eef0ff;
+      --border: #d4d7dc;
+      --card-radius: 18px;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1f22;
+        --bg-alt: #313338;
+        --bg-soft: #2b2d31;
+        --text: #f2f3f5;
+        --text-soft: #b5bac1;
+        --accent: #5865f2;
+        --accent-soft: rgba(88, 101, 242, 0.12);
+        --border: #3f4147;
+        --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
     body {
-      background: #0d0f12;
-      color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
+      background: radial-gradient(circle at top, var(--bg-soft) 0, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 40px;
     }
 
-    header {
+    h1 {
       text-align: center;
-      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 20px;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+      max-width: 1120px;
+      margin: 0 auto;
     }
 
-    .server-card {
-      background: #1a1d23;
-      padding: 15px;
-      border-radius: 10px;
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--card-radius);
+      padding: 16px 18px 14px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.6s ease-out both;
+    }
+
+    .card-header {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
-      gap: 15px;
-      border: 1px solid #2a2f38;
-      transition: 0.2s;
+      justify-content: space-between;
+      margin-bottom: 8px;
     }
 
-    .server-card:hover {
-      transform: translateY(-2px);
-      border-color: #3b4250;
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
     }
 
-    .rank {
-      font-size: 1.6rem;
-      font-weight: bold;
-      width: 50px;
-      text-align: center;
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 2px;
     }
 
-    .info h2 {
-      margin: 0;
-      font-size: 1.2rem;
+    .badge {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+    }
+
+    .badge.gold {
+      border-color: gold;
+      color: gold;
+      background: rgba(255, 215, 0, 0.12);
+    }
+
+    .badge.silver {
+      border-color: silver;
+      color: silver;
+      background: rgba(192, 192, 192, 0.12);
+    }
+
+    .badge.bronze {
+      border-color: #cd7f32;
+      color: #cd7f32;
+      background: rgba(205, 127, 50, 0.12);
     }
 
     .join-btn {
-      background: #5865F2;
-      padding: 8px 14px;
-      border-radius: 6px;
+      display: inline-block;
+      margin-top: 12px;
+      background: var(--accent);
       color: white;
+      padding: 8px 14px;
+      border-radius: 999px;
       text-decoration: none;
-      font-weight: bold;
-      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 600;
+      transition: 0.18s;
     }
 
     .join-btn:hover {
-      background: #4752C4;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(88, 101, 242, 0.7);
     }
 
     .no-invite {
-      opacity: 0.5;
-      white-space: nowrap;
-    }
-
-    .loading, .error {
-      text-align: center;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-soft);
       opacity: 0.7;
     }
 
-    /* TOP 3 */
-    .top1 { border-left: 5px solid gold; }
-    .top2 { border-left: 5px solid silver; }
-    .top3 { border-left: 5px solid #cd7f32; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>🏆 Top Bumps – AdminBot</h1>
-    <p>Classement des serveurs les plus actifs</p>
-  </header>
+  <h1>🏆 Top Bumps – AdminBot</h1>
 
-  <main id="top-list">
-    <p class="loading">Chargement du classement…</p>
-  </main>
+  <div id="grid" class="grid">
+    <p style="text-align:center; opacity:0.7;">Chargement…</p>
+  </div>
 
   <script>
     const API_URL = "https://TON-PROJET.railway.app/api/top-bumps";
 
     async function loadTop() {
-      const container = document.getElementById("top-list");
+      const grid = document.getElementById("grid");
 
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
 
-        container.innerHTML = "";
+        grid.innerHTML = "";
 
         data.forEach(server => {
-          const card = document.createElement("div");
-          card.className = "server-card";
+          const card = document.createElement("article");
+          card.className = "card";
 
-          // TOP 3 couleurs
-          if (server.position === 1) card.classList.add("top1");
-          if (server.position === 2) card.classList.add("top2");
-          if (server.position === 3) card.classList.add("top3");
+          let badgeClass = "";
+          if (server.position === 1) badgeClass = "gold";
+          if (server.position === 2) badgeClass = "silver";
+          if (server.position === 3) badgeClass = "bronze";
 
           card.innerHTML = `
-            <div class="rank">#${server.position}</div>
-
-            <div class="info">
-              <h2>${server.name}</h2>
-              <p>${server.bumps} bumps</p>
+            <div class="card-header">
+              <div>
+                <div class="card-title">${server.name}</div>
+                <div class="card-subtitle">#${server.position} · ${server.bumps} bumps</div>
+              </div>
+              <span class="badge ${badgeClass}">#${server.position}</span>
             </div>
 
-            <div class="actions">
-              ${server.invite 
+            ${
+              server.invite
                 ? `<a href="${server.invite}" target="_blank" class="join-btn">Rejoindre</a>`
-                : `<span class="no-invite">Pas d'invite</span>`
-              }
-            </div>
+                : `<div class="no-invite">Aucune invite disponible</div>`
+            }
           `;
 
-          container.appendChild(card);
+          grid.appendChild(card);
         });
 
       } catch (err) {
-        container.innerHTML = `<p class="error">Impossible de charger les données.</p>`;
+        grid.innerHTML = `<p style="text-align:center; opacity:0.7;">Impossible de charger les données.</p>`;
       }
     }
 
     loadTop();
-    setInterval(loadTop, 30000); // refresh auto 30s
+    setInterval(loadTop, 30000);
   </script>
 
 </body>
