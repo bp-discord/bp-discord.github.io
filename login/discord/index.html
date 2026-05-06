@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion Discord – BP Discord</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" type="image/x-icon" href="/logo.ico">
+
+  <style>
+    :root {
+      --bg: #f2f3f5;
+      --bg-alt: #ffffff;
+      --bg-soft: #e3e5e8;
+      --text: #060607;
+      --text-soft: #4f5660;
+      --accent: #5865f2;
+      --border: #d4d7dc;
+      --card-radius: 18px;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1f22;
+        --bg-alt: #313338;
+        --bg-soft: #2b2d31;
+        --text: #f2f3f5;
+        --text-soft: #b5bac1;
+        --accent: #5865f2;
+        --border: #3f4147;
+        --shadow-soft: 0 18px 40px rgba(0,0,0,0.6);
+      }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+
+    body {
+      background: radial-gradient(circle at top, var(--bg-soft) 0, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.12), transparent 70%);
+      padding: 10px 0 6px;
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(88,101,242,0.7);
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .brand-text-title { font-size: 16px; font-weight: 700; }
+    .brand-text-sub { font-size: 12px; color: var(--text-soft); }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.18s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 12px 30px rgba(88,101,242,0.7);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(88,101,242,0.9);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+
+    /* PAGE */
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 16px;
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--card-radius);
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      max-width: 600px;
+      margin: 0 auto 26px;
+      animation: fadeUp 0.6s ease-out both;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+
+    .account-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .account-btn {
+      background: var(--bg-soft);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .account-btn:hover {
+      background: var(--accent-soft);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="/adminbot/logo.png" alt="AdminBot">
+        </div>
+        <div>
+          <div class="brand-text-title">BP Discord</div>
+          <div class="brand-text-sub">BP Pannel officiel</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a class="btn btn-primary" href="/">Accueil</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE -->
+  <div class="page">
+
+    <!-- CARTE DISCORD -->
+    <article class="card">
+      <div class="card-title">Se connecter avec Discord</div>
+      <div class="card-subtitle">Choisissez un compte Discord pour continuer.</div>
+
+      <!-- SI l'utilisateur a déjà utilisé Discord OAuth2 -->
+      <div id="previousAccounts" style="display:none;">
+        <div class="card-subtitle" style="margin-top:4px; font-weight:600;">Connecté précédemment</div>
+
+        <div class="account-list" id="accountList"></div>
+
+        <button class="btn-ghost" style="margin-top:10px; width:100%;">Ajouter un compte</button>
+      </div>
+
+      <!-- BOUTON PRINCIPAL -->
+      <a id="discordLoginBtn" class="btn btn-primary" style="margin-top:16px; display:block; text-align:center;">
+        Connexion
+      </a>
+    </article>
+
+    <!-- CARTE BLOCPLAY -->
+    <article class="card">
+      <div class="card-title">Vous avez aussi un compte BlocPlay ?</div>
+      <div class="card-subtitle">Ajoutez-le maintenant pour lier vos comptes.</div>
+
+      <a href="/login/blocplay" class="btn btn-primary" style="display:block; text-align:center;">
+        Connexion à BlocPlay
+      </a>
+    </article>
+
+  </div>
+
+  <script>
+    // Simulation : comptes Discord déjà utilisés
+    const previous = [
+      { name: "Compte 1", id: "123" },
+      { name: "Compte 2", id: "456" }
+    ];
+
+    const previousAccountsDiv = document.getElementById("previousAccounts");
+    const accountList = document.getElementById("accountList");
+
+    if (previous.length > 0) {
+      previousAccountsDiv.style.display = "block";
+      previous.forEach(acc => {
+        const btn = document.createElement("button");
+        btn.className = "account-btn";
+        btn.textContent = acc.name;
+        accountList.appendChild(btn);
+      });
+    }
+
+    // Bouton Discord OAuth2
+    document.getElementById("discordLoginBtn").onclick = () => {
+      window.location.href = "/auth/discord/login";
+    };
+  </script>
+
+</body>
+</html>
