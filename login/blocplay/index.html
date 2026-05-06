@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion BlocPlay – BP Discord</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" type="image/x-icon" href="/logo.ico">
+
+  <style>
+    :root {
+      --bg: #f2f3f5;
+      --bg-alt: #ffffff;
+      --bg-soft: #e3e5e8;
+      --text: #060607;
+      --text-soft: #4f5660;
+      --accent: #5865f2;
+      --border: #d4d7dc;
+      --card-radius: 18px;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1f22;
+        --bg-alt: #313338;
+        --bg-soft: #2b2d31;
+        --text: #f2f3f5;
+        --text-soft: #b5bac1;
+        --accent: #5865f2;
+        --border: #3f4147;
+        --shadow-soft: 0 18px 40px rgba(0,0,0,0.6);
+      }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
+
+    body {
+      background: radial-gradient(circle at top, var(--bg-soft) 0, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.12), transparent 70%);
+      padding: 10px 0 6px;
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(88,101,242,0.7);
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .brand-text-title { font-size: 16px; font-weight: 700; }
+    .brand-text-sub { font-size: 12px; color: var(--text-soft); }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.18s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 12px 30px rgba(88,101,242,0.7);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(88,101,242,0.9);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+
+    /* PAGE */
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 16px;
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--card-radius);
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      max-width: 600px;
+      margin: 0 auto 26px;
+      animation: fadeUp 0.6s ease-out both;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      font-size: 14px;
+      margin-bottom: 12px;
+      transition: 0.15s;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="/adminbot/logo.png" alt="AdminBot">
+        </div>
+        <div>
+          <div class="brand-text-title">BP Discord</div>
+          <div class="brand-text-sub">BP Pannel officiel</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a class="btn btn-primary" href="/">Accueil</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE -->
+  <div class="page">
+
+    <!-- CARTE BLOCPLAY -->
+    <article class="card">
+      <div class="card-title">Connexion à BlocPlay</div>
+      <div class="card-subtitle">Entrez votre email et votre mot de passe BlocPlay.</div>
+
+      <input id="email" type="email" class="input" placeholder="Adresse email">
+      <input id="password" type="password" class="input" placeholder="Mot de passe">
+
+      <button id="loginBtn" class="btn btn-primary" style="width:100%; margin-top:10px;">
+        Connexion
+      </button>
+
+      <div class="card-subtitle" style="margin-top:12px; font-size:12px;">
+        Pas d'inscription ici.  
+        <a href="https://blocplay.fr" target="_blank" style="color:var(--accent); font-weight:600;">Créer un compte sur le site officiel</a>
+      </div>
+    </article>
+
+    <!-- CARTE DISCORD -->
+    <article class="card">
+      <div class="card-title">Vous avez aussi un compte Discord ?</div>
+      <div class="card-subtitle">Connectez-vous pour lier vos comptes automatiquement.</div>
+
+      <a href="/login/discord" class="btn btn-primary" style="display:block; text-align:center;">
+        Connexion Discord
+      </a>
+    </article>
+
+  </div>
+
+  <!-- FIREBASE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQHLAG_Dvnc-a8LDJ__05oRwMmEtUkn04",
+      authDomain: "blocplay-a9417.firebaseapp.com",
+      databaseURL: "https://blocplay-a9417-default-rtdb.firebaseio.com",
+      projectId: "blocplay-a9417",
+      storageBucket: "blocplay-a9417.firebasestorage.app",
+      messagingSenderId: "540161549188",
+      appId: "1:540161549188:web:de8ed0e79205d361f333d1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById("loginBtn").onclick = async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        const user = await signInWithEmailAndPassword(auth, email, password);
+
+        // Redirection après connexion
+        window.location.href = "/auth/blocplay/callback";
+      } catch (err) {
+        alert("Erreur : " + err.message);
+      }
+    };
+  </script>
+
+</body>
+</html>
