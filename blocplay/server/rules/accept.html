@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlocPlay - Accept Rules</title>
+
+<style>
+body {
+margin: 0;
+font-family: Arial;
+background: #0f172a;
+color: white;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 100vh;
+text-align: center;
+}
+
+.card {
+background: #1e293b;
+padding: 30px;
+border-radius: 16px;
+width: 90%;
+max-width: 500px;
+}
+
+button {
+margin-top: 20px;
+padding: 14px 20px;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+font-size: 16px;
+background: #5865F2;
+color: white;
+}
+
+button:hover {
+background: #4752c4;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h1>📜 BlocPlay - Règles</h1>
+
+<p>Pour accéder au serveur, tu dois accepter les règles et te connecter avec Discord.</p>
+
+<button onclick="loginDiscord()">Se connecter avec Discord</button>
+
+</div>
+
+<script>
+function loginDiscord() {
+
+const clientId = "TON_CLIENT_ID";
+const redirectUri = "https://blocplay-beta.github.io/discord/rules/callback";
+
+const url =
+`https://discord.com/oauth2/authorize?client_id=${clientId}` +
+`&redirect_uri=${encodeURIComponent(redirectUri)}` +
+`&response_type=code` +
+`&scope=identify%20guilds.join`;
+
+window.location.href = url;
+}
+</script>
+
+</body>
+</html>
