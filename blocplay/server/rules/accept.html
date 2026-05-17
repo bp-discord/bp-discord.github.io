@@ -169,23 +169,8 @@ Advertising for a website, bot, application, server, game or other things is pro
 
 const clientId = "1471824801088802879";
 
-// ⚠️ IMPORTANT
-// Mets EXACTEMENT cette URL dans Discord Developer Portal
-// OAuth2 -> Redirects
-
 const redirectUri =
-"https://bp-discord.github.io/blocplay/server/rules/accept";
-
-const guildInvite =
-"https://discord.gg/45P7g8MTvn";
-
-const params = new URLSearchParams(window.location.search);
-
-const code = params.get("code");
-
-const acceptBtn = document.getElementById("acceptBtn");
-
-if(!code){
+"https://bp-discord.github.io/blocplay/server/rules/accept/";
 
 const loginUrl =
 `https://discord.com/oauth2/authorize?client_id=${clientId}` +
@@ -194,24 +179,6 @@ const loginUrl =
 `&scope=identify%20guilds`;
 
 window.location.href = loginUrl;
-
-}else{
-
-acceptBtn.onclick = () => {
-
-acceptBtn.innerText = "✔ Règles acceptées";
-
-acceptBtn.style.background = "#43b581";
-
-setTimeout(() => {
-
-window.location.href = guildInvite;
-
-},1200);
-
-};
-
-}
 
 </script>
 
