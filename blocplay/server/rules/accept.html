@@ -3,119 +3,213 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlocPlay - Acceptation</title>
+
+<title>BlocPlay • Accepter les rêgles</title>
 
 <style>
-body {
-margin: 0;
-font-family: Arial;
-background: #0f172a;
-color: white;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-text-align: center;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-.card {
-background: #1e293b;
-padding: 30px;
-border-radius: 16px;
-width: 90%;
-max-width: 500px;
+body{
+    background:#313338;
+    font-family:Arial, sans-serif;
+    color:white;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
 }
 
-button {
-margin-top: 20px;
-padding: 14px 20px;
-border: none;
-border-radius: 10px;
-cursor: pointer;
-font-size: 16px;
-background: #5865F2;
-color: white;
+.bg{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:
+    radial-gradient(circle at top left,#5865F230,transparent 30%),
+    radial-gradient(circle at bottom right,#5865F220,transparent 30%);
 }
 
-button:hover {
-background: #4752c4;
+.card{
+    position:relative;
+    z-index:2;
+    width:95%;
+    max-width:520px;
+    background:#1e1f22;
+    border:1px solid #2b2d31;
+    border-radius:22px;
+    padding:35px;
+    box-shadow:0 0 30px rgba(0,0,0,0.4);
+    text-align:center;
+}
+
+.logo{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    margin:auto;
+    margin-bottom:20px;
+    background:#5865F2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:42px;
+    font-weight:bold;
+}
+
+h1{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#b5bac1;
+    margin-bottom:30px;
+    line-height:1.5;
+}
+
+.rules{
+    background:#2b2d31;
+    border-radius:16px;
+    padding:18px;
+    text-align:left;
+    margin-bottom:25px;
+}
+
+.rule{
+    margin-bottom:18px;
+}
+
+.rule:last-child{
+    margin-bottom:0;
+}
+
+.rule-title{
+    font-weight:bold;
+    margin-bottom:6px;
+    color:#ffffff;
+}
+
+.rule-text{
+    color:#b5bac1;
+    line-height:1.5;
+}
+
+button{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    background:#5865F2;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:0.2s;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#4752c4;
+    transform:scale(1.02);
+}
+
+.status{
+    margin-top:18px;
+    color:#43b581;
+    font-size:15px;
 }
 </style>
 </head>
 
 <body>
 
+<div class="bg"></div>
+
 <div class="card">
-<h1>📜 BlocPlay - Règles</h1>
 
-<p id="status">Connexion Discord...</p>
+<div class="logo">B</div>
 
-<button id="actionBtn" style="display:none;"></button>
+<h1>BlocPlay</h1>
+
+<div class="subtitle">
+Accept the rules to access the BlocPlay Discord server.
+</div>
+
+<div class="rules">
+
+<div class="rule">
+<div class="rule-title">1 • Mentions</div>
+<div class="rule-text">
+Mentions of @everyone, @here or others are prohibited on this server.
+</div>
+</div>
+
+<div class="rule">
+<div class="rule-title">2 • Advertising</div>
+<div class="rule-text">
+Advertising for a website, bot, application, server, game or other things is prohibited.
+</div>
+</div>
+
+</div>
+
+<button id="acceptBtn">
+✅ Accepter les règles
+</button>
+
+<div class="status" id="status">
+✔ Serveur BlocPlay détecté
+</div>
+
 </div>
 
 <script>
+
 const clientId = "1471824801088802879";
 
-// ✔ URL SANS .html
-const redirectUri = "https://bp-discord.github.io/blocplay/server/rules/accept";
+const redirectUri =
+"https://bp-discord.github.io/blocplay/server/rules/accept/";
 
-const guildInvite = "https://discord.gg/45P7g8MTvn";
+const guildInvite =
+"https://discord.gg/45P7g8MTvn";
 
 const params = new URLSearchParams(window.location.search);
+
 const code = params.get("code");
 
-let inGuild = true;
+const acceptBtn = document.getElementById("acceptBtn");
 
-function login() {
-const url =
+if(!code){
+
+const loginUrl =
 `https://discord.com/oauth2/authorize?client_id=${clientId}` +
 `&response_type=code` +
 `&redirect_uri=${encodeURIComponent(redirectUri)}` +
 `&scope=identify%20guilds`;
 
-window.location.href = url;
-}
+window.location.href = loginUrl;
 
-function render() {
-const btn = document.getElementById("actionBtn");
-const status = document.getElementById("status");
+}else{
 
-if (inGuild) {
-status.innerText = "✔ Tu es sur le serveur BlocPlay";
+acceptBtn.onclick = () => {
 
-btn.innerText = "✅ Accepter les règles";
-btn.onclick = () => {
-window.location.href = "https://discord.com/channels/@me";
-};
+acceptBtn.innerText = "✔ Règles acceptées";
 
-} else {
-status.innerText = "❌ Tu n'es pas sur le serveur BlocPlay";
+acceptBtn.style.background = "#43b581";
 
-btn.innerText = "🔗 Rejoindre le serveur";
-btn.onclick = () => {
+setTimeout(() => {
+
 window.location.href = guildInvite;
+
+}, 1200);
+
 };
+
 }
 
-btn.style.display = "block";
-}
-
-async function init() {
-
-if (!code) {
-login();
-return;
-}
-
-// ⚠️ simulation (backend requis pour vrai check)
-document.getElementById("status").innerText = "Vérification du compte...";
-
-inGuild = false;
-
-render();
-}
-
-init();
 </script>
 
 </body>
