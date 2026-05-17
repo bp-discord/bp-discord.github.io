@@ -2,14 +2,40 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>BlocPlay Rules Sender</title>
+<title>BlocPlay - Règlement</title>
+<style>
+body {
+font-family: Arial;
+background: #2b2d31;
+color: white;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+height: 100vh;
+}
+
+button {
+padding: 12px 20px;
+font-size: 16px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+background: #5865F2;
+color: white;
+}
+
+button:hover {
+background: #4752c4;
+}
+</style>
 </head>
 
 <body>
 
-<h2>Envoyer les règles BlocPlay</h2>
+<h1>📜 Envoyer les règles BlocPlay</h1>
 
-<button onclick="sendRules()">Envoyer</button>
+<button onclick="sendRules()">Envoyer sur Discord</button>
 
 <script>
 async function sendRules() {
@@ -21,12 +47,11 @@ method: "POST",
 headers: {
 "Content-Type": "application/json"
 },
-
 body: JSON.stringify({
 
 embeds: [
 {
-title: "📜 Règlement du serveur BlocPlay",
+title: "Rules",
 description:
 `### 1 •
 > Mentions of @everyone, @here or others are prohibited on this server.
@@ -37,7 +62,7 @@ description:
 ---
 
 Any rule that is not respected will be sanctioned according to the rule that was not respected.`,
-color: FF2B2D31
+color: 3092790
 }
 ],
 
@@ -47,7 +72,7 @@ type: 1,
 components: [
 {
 type: 2,
-style: 3,
+style: 5,
 label: "Accepter les règles",
 url: "https://blocplay-beta.github.io/discord/rules/accept"
 }
@@ -58,9 +83,8 @@ url: "https://blocplay-beta.github.io/discord/rules/accept"
 })
 });
 
-alert("Règles envoyées !");
+alert("Règles envoyées sur Discord !");
 }
-
 </script>
 
 </body>
