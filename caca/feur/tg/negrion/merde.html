@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BlocPlay+ Embed</title>
+
+<style>
+body{
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+    font-family:Arial;
+}
+
+button{
+    background:#5865F2;
+    color:white;
+    border:none;
+    padding:16px 30px;
+    border-radius:14px;
+    font-size:18px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<button onclick="sendEmbed()">Envoyer l'embed</button>
+
+<script>
+async function sendEmbed() {
+
+const webhook = "https://discord.com/api/webhooks/1505533044813991988/XeGUSSWoX8knuFU3VvwwLZIueqDM6Gw74nl6jS7dRPEsgLTZzIWiwcwvzw_3Qc4Rdg44";
+
+await fetch(webhook, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+
+        embeds: [{
+            title: "𝗕𝗹𝗼𝗰𝗣𝗹𝗮𝘆 ➕ — Description",
+
+            description:
+`𝗕𝗹𝗼𝗰𝗣𝗹𝗮𝘆 ➕ est un abonnement qui vous propose pleins de fonctionnalités que vous ne pouvez pas louper :
+
+> **Plus d'emplacements de contact sur BP Contact :** 80 sans abonnement / illimité avec l'abonnement
+
+> **Plus d'espace de stockage sur BlocPlay Cloud :** 130 Ko de stockage sans abonnement / 300 Ko de stockage avec l'abonnement
+
+> **Personnalisation de l'affichage de BP Contact et BP Discord :** garder le thème par défaut sans abonnement / possibilité de changer la couleur de fond, des boutons et du texte avec l'abonnement
+
+## Et pleins d'autres avantages majeurs...`,
+
+            color: 0x5865F2
+        }],
+
+        components: [{
+            type: 1,
+            components: [{
+                type: 2,
+                style: 5,
+                label: "Découvrir 𝗕𝗹𝗼𝗰𝗣𝗹𝗮𝘆 ➕",
+                url: "https://blocplay-beta.github.io/blocplay+/features"
+            }]
+        }]
+
+    })
+});
+
+alert("Embed envoyé !");
+}
+</script>
+
+</body>
+</html>
