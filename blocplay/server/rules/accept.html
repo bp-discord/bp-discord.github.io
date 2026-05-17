@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>BlocPlay • Accepter les rêgles</title>
+<title>BlocPlay • Acceptation</title>
 
 <style>
 *{
@@ -15,7 +15,7 @@
 
 body{
     background:#313338;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
     color:white;
     height:100vh;
     display:flex;
@@ -90,7 +90,6 @@ h1{
 .rule-title{
     font-weight:bold;
     margin-bottom:6px;
-    color:#ffffff;
 }
 
 .rule-text{
@@ -160,7 +159,7 @@ Advertising for a website, bot, application, server, game or other things is pro
 ✅ Accepter les règles
 </button>
 
-<div class="status" id="status">
+<div class="status">
 ✔ Serveur BlocPlay détecté
 </div>
 
@@ -169,6 +168,10 @@ Advertising for a website, bot, application, server, game or other things is pro
 <script>
 
 const clientId = "1471824801088802879";
+
+// ⚠️ IMPORTANT
+// Mets EXACTEMENT cette URL dans Discord Developer Portal
+// OAuth2 -> Redirects
 
 const redirectUri =
 "https://bp-discord.github.io/blocplay/server/rules/accept";
@@ -185,7 +188,10 @@ const acceptBtn = document.getElementById("acceptBtn");
 if(!code){
 
 const loginUrl =
-`https://discord.com/oauth2/authorize?client_id=1471824801088802879&response_type=code&redirect_uri=https%3A%2F%2Fbp-discord.github.io%2Fblocplay%2Fserver%2Frules%2Faccept&scope=identify%20guilds`;
+`https://discord.com/oauth2/authorize?client_id=${clientId}` +
+`&response_type=code` +
+`&redirect_uri=${encodeURIComponent(redirectUri)}` +
+`&scope=identify%20guilds`;
 
 window.location.href = loginUrl;
 
@@ -201,7 +207,7 @@ setTimeout(() => {
 
 window.location.href = guildInvite;
 
-}, 1200);
+},1200);
 
 };
 
