@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Accepter les règles du serveur Discord 𝗕𝗹𝗼𝗰𝗣𝗹𝗮𝘆</title>
+<title>BlocPlay - Acceptation</title>
 
 <style>
 body {
@@ -48,22 +48,57 @@ background: #4752c4;
 <div class="card">
 <h1>📜 BlocPlay - Règles</h1>
 
-<p id="status">Connexion en cours...</p>
+<p id="status">Connexion Discord...</p>
 
-<button id="actionBtn" onclick="handleAction()" style="display:none;"></button>
+<button id="actionBtn" style="display:none;"></button>
 </div>
 
 <script>
 const clientId = "1471824801088802879";
+
+// ✔ URL SANS .html
 const redirectUri = "https://bp-discord.github.io/blocplay/server/rules/accept";
-const guildId = "TON_SERVER_ID";
 
-let user = null;
-let inGuild = false;
+const guildInvite = "https://discord.gg/TON_INVITE";
 
-// 1. Récupérer code OAuth2
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
+
+let inGuild = false;
+
+function login() {
+const url =
+`https://discord.com/oauth2/authorize?client_id=${clientId}` +
+`&response_type=code` +
+`&redirect_uri=${encodeURIComponent(redirectUri)}` +
+`&scope=identify%20guilds`;
+
+window.location.href = url;
+}
+
+function render() {
+const btn = document.getElementById("actionBtn");
+const status = document.getElementById("status");
+
+if (inGuild) {
+status.innerText = "✔ Tu es sur le serveur BlocPlay";
+
+btn.innerText = "✅ Accepter les règles";
+btn.onclick = () => {
+window.location.href = "https://discord.com/channels/@me";
+};
+
+} else {
+status.innerText = "❌ Tu n'es pas sur le serveur BlocPlay";
+
+btn.innerText = "🔗 Rejoindre le serveur";
+btn.onclick = () => {
+window.location.href = guildInvite;
+};
+}
+
+btn.style.display = "block";
+}
 
 async function init() {
 
@@ -72,55 +107,12 @@ login();
 return;
 }
 
-// 2. envoyer code à backend (OBLIGATOIRE normalement)
-document.getElementById("status").innerText = "Vérification Discord...";
+// ⚠️ simulation (backend requis pour vrai check)
+document.getElementById("status").innerText = "Vérification du compte...";
 
-// ⚠️ simulation frontend (dans vrai système → backend)
-const res = await fetch("https://discord.com/api/users/@me", {
-headers: {
-Authorization: "Bearer FAKE_TOKEN_FOR_FRONTEND"
-}
-}).catch(() => null);
-
-// fallback logique simple UI
-user = { id: "0" };
-
-// 3. simulation appartenance serveur
-// 👉 ici normalement backend check guilds.members.read
-inGuild = false; // à remplacer par vrai check serveur
+inGuild = false;
 
 render();
-}
-
-function render() {
-const btn = document.getElementById("actionBtn");
-const status = document.getElementById("status");
-
-if (inGuild) {
-status.innerText = "✔ Tu es déjà sur le serveur BlocPlay";
-btn.innerText = "✅ Accepter les règles";
-btn.onclick = () => {
-window.location.href = "https://discord.com/channels/@me";
-};
-} else {
-status.innerText = "❌ Tu n'es pas sur le serveur BlocPlay";
-btn.innerText = "🔗 Rejoindre le serveur";
-btn.onclick = () => {
-window.location.href = "https://discord.gg/TON_INVITE";
-};
-}
-
-btn.style.display = "block";
-}
-
-function login() {
-const url =
-`https://discord.com/oauth2/authorize?client_id=1471824801088802879&response_type=code&redirect_uri=https%3A%2F%2Fbp-discord.github.io%2Fblocplay%2Fserver%2Frules%2Faccept&scope=identify%20guilds`;
-
-window.location.href = url;
-}
-
-function handleAction() {
 }
 
 init();
