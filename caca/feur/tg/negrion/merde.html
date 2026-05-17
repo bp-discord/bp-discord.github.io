@@ -2,9 +2,11 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>BlocPlay - Règlement</title>
+<title>BlocPlay Rules V2 Sender</title>
+
 <style>
 body {
+margin: 0;
 font-family: Arial;
 background: #2b2d31;
 color: white;
@@ -16,10 +18,10 @@ height: 100vh;
 }
 
 button {
-padding: 12px 20px;
+padding: 14px 22px;
 font-size: 16px;
 border: none;
-border-radius: 8px;
+border-radius: 10px;
 cursor: pointer;
 background: #5865F2;
 color: white;
@@ -33,7 +35,7 @@ background: #4752c4;
 
 <body>
 
-<h1>📜 Envoyer les règles BlocPlay</h1>
+<h1>📜 BlocPlay - Envoi Règlement</h1>
 
 <button onclick="sendRules()">Envoyer sur Discord</button>
 
@@ -42,31 +44,31 @@ async function sendRules() {
 
 const webhook = "https://discord.com/api/webhooks/1505577752831725590/2lWtaz7pOSfd2YIs-iYPSg8izs7Pz1c08DJPib1nt65Kb7QVpA4V7kvqOzmJYbteQ1zB";
 
-await fetch(webhook, {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-
-embeds: [
-{
-title: "Rules",
-description:
-`### 1 •
-> Mentions of @everyone, @here or others are prohibited on this server.
-
-### 2 •
-> Prohibition of advertising for a website, bot, application, server, game or other things.
-
----
-
-Any rule that is not respected will be sanctioned according to the rule that was not respected.`,
-color: 3092790
-}
-],
-
+const payload = {
+flags: 32768,
 components: [
+{
+type: 17,
+components: [
+{
+type: 10,
+content: "# Rules"
+},
+{
+type: 14
+},
+{
+type: 10,
+content: "### 1 •\n> Mentions of @everyone, @here or others are prohibited on this server."
+},
+{
+type: 10,
+content: "### 2 •\n> Prohibition of advertising for a website, bot, application, server, game or other things."
+},
+{
+type: 10,
+content: "Any rule that is not respected will be sanctioned according to the rule that was not respected."
+},
 {
 type: 1,
 components: [
@@ -79,12 +81,21 @@ url: "https://blocplay-beta.github.io/discord/rules/accept"
 ]
 }
 ]
+}
+]
+};
 
-})
+await fetch(webhook, {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify(payload)
 });
 
-alert("Règles envoyées sur Discord !");
+alert("Message envoyé !");
 }
+
 </script>
 
 </body>
