@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>BlocPlay Règlement V2</title>
+<title>BlocPlay+ V2</title>
 
 <style>
 body{
@@ -28,10 +28,9 @@ button{
 }
 </style>
 </head>
-
 <body>
 
-<button onclick="sendMessage()">Envoyer les règles</button>
+<button onclick="sendMessage()">Envoyer</button>
 
 <script>
 async function sendMessage() {
@@ -59,17 +58,20 @@ await fetch(webhook + "?with_components=true", {
                     {
                         type: 10,
                         content:
-`# 📜 Rules
+`# 📜 Rules :
 
-### 1 •
-> Mentions of @everyone, @here or others are prohibited on this server.
+Caca nique ta mère sale fils de pute... abonnement qui vous propose pleins de fonctionnalités que vous ne pouvez pas louper :
 
-### 2 •
-> Prohibition of advertising for a website, bot, application, server, game or other things.
+> **Plus d'emplacements de contact sur BP Contact :**
+> 80 sans abonnement / illimité avec l'abonnement
 
----
+> **Plus d'espace de stockage sur BlocPlay Cloud :**
+> 130 Ko de stockage sans abonnement / 300 Ko de stockage avec l'abonnement
 
-Any rule that is not respected will be sanctioned according to the rule that was not respected.`
+> **Personnalisation de l'affichage de BP Contact et BP Discord :**
+> garder le thème par défaut sans abonnement / possibilité de changer la couleur de fond, des boutons et du texte avec l'abonnement
+
+## Et pleins d'autres avantages majeurs...`
                     },
 
                     {
@@ -84,7 +86,7 @@ Any rule that is not respected will be sanctioned according to the rule that was
                             {
                                 type: 2,
                                 style: 5,
-                                label: "Accepter les règles",
+                                label: "Accept rules",
                                 url: "https://blocplay-beta.github.io/discord/rules/accept"
                             }
                         ]
@@ -97,7 +99,7 @@ Any rule that is not respected will be sanctioned according to the rule that was
     })
 });
 
-alert("Règles envoyées !");
+alert("Message Components V2 envoyé !");
 }
 </script>
 
