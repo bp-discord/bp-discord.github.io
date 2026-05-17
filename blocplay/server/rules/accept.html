@@ -55,7 +55,7 @@ background: #4752c4;
 
 <script>
 const clientId = "1471824801088802879";
-const redirectUri = "https://bp-discord.github.io/blocplay/server/rules/accept.html";
+const redirectUri = "https://bp-discord.github.io/blocplay/server/rules/accept";
 const guildId = "TON_SERVER_ID";
 
 let user = null;
@@ -115,11 +115,7 @@ btn.style.display = "block";
 
 function login() {
 const url =
-`https://discord.com/oauth2/authorize` +
-`?client_id=${clientId}` +
-`&response_type=code` +
-`&redirect_uri=${encodeURIComponent(redirectUri)}` +
-`&scope=identify%20guilds`;
+`https://discord.com/oauth2/authorize?client_id=1471824801088802879&response_type=code&redirect_uri=https%3A%2F%2Fbp-discord.github.io%2Fblocplay%2Fserver%2Frules%2Faccept&scope=identify%20guilds`;
 
 window.location.href = url;
 }
