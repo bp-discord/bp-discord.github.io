@@ -3,371 +3,578 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlocPlay • Règles du serveur</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
+<title>BlocPlay</title>
 
+<style>
+/* gg Sans via base64 subset — fallback chain identique à Discord */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap');
+
+/* ─────────────────────────────────────────
+   TOKENS DISCORD — valeurs exactes
+───────────────────────────────────────── */
 :root {
-  --bg-primary:    #313338;
-  --bg-secondary:  #2b2d31;
-  --bg-tertiary:   #1e1f22;
-  --blurple:       #5865F2;
-  --blurple-dark:  #4752c4;
-  --blurple-glow:  rgba(88,101,242,0.35);
-  --green:         #23a55a;
-  --green-glow:    rgba(35,165,90,0.3);
-  --red:           #f23f43;
-  --text-normal:   #dbdee1;
-  --text-muted:    #80848e;
-  --text-link:     #00a8fc;
-  --border:        rgba(255,255,255,0.06);
+  /* Surfaces */
+  --dc-base:          #1e1f22;
+  --dc-surface:       #2b2d31;
+  --dc-elevated:      #313338;
+  --dc-floating:      #111214;
+  --dc-input-bg:      #1e1f22;
+
+  /* Brand */
+  --dc-blurple:       #5865f2;
+  --dc-blurple-hover: #4752c4;
+  --dc-blurple-active:#3c45a5;
+
+  /* Status */
+  --dc-green:         #23a55a;
+  --dc-green-hover:   #1a7f44;
+  --dc-red:           #f23f43;
+  --dc-yellow:        #f0b232;
+
+  /* Text */
+  --dc-header-primary:   #f2f3f5;
+  --dc-header-secondary: #b5bac1;
+  --dc-text-normal:      #dbdee1;
+  --dc-text-muted:       #80848e;
+  --dc-text-link:        #00a8fc;
+
+  /* Interactive */
+  --dc-interactive-normal: #dbdee1;
+  --dc-interactive-hover:  #ffffff;
+  --dc-interactive-active: #ffffff;
+  --dc-interactive-muted:  #80848e;
+
+  /* Borders */
+  --dc-border: rgba(255,255,255,0.06);
+
+  /* Misc */
+  --dc-font: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --dc-radius-sm: 3px;
+  --dc-radius-md: 8px;
+  --dc-radius-lg: 16px;
+  --dc-radius-full: 50%;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+/* ─────────────────────────────────────────
+   RESET
+───────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html, body {
+  width: 100%; height: 100%;
+}
 
 body {
-  background: var(--bg-primary);
-  font-family: 'Nunito', sans-serif;
-  color: var(--text-normal);
-  min-height: 100vh;
+  font-family: var(--dc-font);
+  font-size: 16px;
+  line-height: 1.375;
+  background: var(--dc-elevated);
+  color: var(--dc-text-normal);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
   position: relative;
 }
 
-body::before, body::after {
-  content: '';
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.12;
+/* ─────────────────────────────────────────
+   BACKGROUND — subtil, pas surchargé
+───────────────────────────────────────── */
+.bg {
+  position: fixed; inset: 0;
+  z-index: 0;
   pointer-events: none;
-  animation: float 12s ease-in-out infinite;
+  overflow: hidden;
 }
-body::before {
+.bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  animation: glow 14s ease-in-out infinite;
+}
+.bg-glow-1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(88,101,242,0.12) 0%, transparent 65%);
+  top: -280px; left: -200px;
+}
+.bg-glow-2 {
   width: 500px; height: 500px;
-  background: var(--blurple);
-  top: -150px; left: -100px;
+  background: radial-gradient(circle, rgba(235,69,158,0.08) 0%, transparent 65%);
+  bottom: -200px; right: -150px;
+  animation-delay: -7s;
 }
-body::after {
-  width: 400px; height: 400px;
-  background: #eb459e;
-  bottom: -100px; right: -100px;
-  animation-delay: -6s;
-}
-
-@keyframes float {
-  0%,100% { transform: translate(0,0) scale(1); }
-  50%      { transform: translate(30px,20px) scale(1.05); }
+@keyframes glow {
+  0%,100% { transform: translate(0,0); }
+  50%      { transform: translate(25px, -20px); }
 }
 
-.card {
-  position: relative;
-  z-index: 1;
-  width: 95%;
-  max-width: 460px;
-  background: var(--bg-tertiary);
-  border-radius: 20px;
-  border: 1px solid var(--border);
+/* ─────────────────────────────────────────
+   MODAL — invite Discord exacte
+───────────────────────────────────────── */
+.modal {
+  position: relative; z-index: 10;
+  width: 95%; max-width: 444px;
+  background: var(--dc-elevated);
+  border-radius: var(--dc-radius-md);
+  overflow: hidden;
   box-shadow:
-    0 0 0 1px rgba(0,0,0,0.3),
-    0 24px 64px rgba(0,0,0,0.5),
-    0 0 80px var(--blurple-glow);
-  overflow: hidden;
-  animation: cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 2px 10px rgba(0,0,0,0.2),
+    0 16px 48px rgba(0,0,0,0.5);
+  animation: popIn .28s cubic-bezier(.175,.885,.32,1.15) both;
+}
+@keyframes popIn {
+  from { opacity:0; transform:scale(.93) translateY(12px); }
+  to   { opacity:1; transform:scale(1)  translateY(0); }
 }
 
-@keyframes cardIn {
-  from { opacity:0; transform:translateY(24px) scale(0.96); }
-  to   { opacity:1; transform:translateY(0) scale(1); }
-}
-
+/* ── Bannière ── */
 .banner {
-  height: 88px;
-  background: linear-gradient(135deg, #5865F2 0%, #8b5cf6 50%, #eb459e 100%);
-  position: relative;
-  overflow: hidden;
+  height: 136px;
+  background: linear-gradient(155deg, #4654d8 0%, #7b4ee8 45%, #c23d99 100%);
+  position: relative; overflow: hidden;
 }
-.banner::after {
+/* Texture rayures subtiles */
+.banner::before {
   content: '';
   position: absolute; inset: 0;
   background: repeating-linear-gradient(
-    45deg, transparent, transparent 20px,
-    rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 40px
+    -50deg,
+    transparent 0px, transparent 24px,
+    rgba(0,0,0,0.04) 24px, rgba(0,0,0,0.04) 48px
   );
 }
+/* Reflet en haut */
+.banner::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 60%);
+}
 
-.avatar-wrap {
+/* ── Zone icône + nom de serveur ── */
+.server-header {
+  padding: 0 20px 16px;
+}
+
+.icon-row {
   display: flex;
-  justify-content: center;
-  margin-top: -44px;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: -40px;
   margin-bottom: 12px;
-  position: relative;
-  z-index: 2;
-}
-.avatar {
-  width: 88px; height: 88px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #5865F2, #8b5cf6);
-  border: 6px solid var(--bg-tertiary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  font-weight: 800;
-  color: white;
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.08);
 }
 
-.body {
-  padding: 0 26px 26px;
-  text-align: center;
+.server-icon {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 6px solid var(--dc-elevated);
+  background: linear-gradient(140deg, #5865f2 0%, #7c3aed 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px; font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  position: relative;
+  user-select: none;
+}
+/* Pastille en ligne */
+.server-icon::after {
+  content: '';
+  position: absolute; bottom: 3px; right: 3px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--dc-green);
+  border: 3px solid var(--dc-elevated);
+}
+
+/* Badge "Serveur communautaire" */
+.community-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  padding: 3px 8px 3px 6px;
+  font-size: 11px; font-weight: 600;
+  color: var(--dc-header-secondary);
+  letter-spacing: 0.2px;
+  margin-bottom: 8px;
+}
+.community-badge svg {
+  width: 14px; height: 14px;
+  fill: var(--dc-header-secondary);
+  flex-shrink: 0;
 }
 
 .server-name {
-  font-size: 22px;
-  font-weight: 800;
-  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--dc-header-primary);
+  line-height: 1.2;
   letter-spacing: -0.3px;
 }
 
-.server-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+/* ── Stats membres ── */
+.member-stats {
+  display: flex; align-items: center; gap: 16px;
   margin-top: 6px;
-  margin-bottom: 20px;
 }
-.server-tag::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 6px var(--green);
+.stat {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 500;
+  color: var(--dc-text-muted);
+}
+.stat-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.stat-dot.online  { background: var(--dc-green); }
+.stat-dot.offline { background: var(--dc-text-muted); }
+
+/* ── Séparateur Discord-style ── */
+.dc-sep {
+  height: 1px;
+  background: var(--dc-border);
+  margin: 0 20px;
 }
 
-.rules-header {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 8px;
-  text-align: left;
+/* ── Body ── */
+.modal-body {
+  padding: 16px 20px 20px;
 }
-.rules-header span {
+
+/* Titre de section — exactement comme Discord */
+.section-title {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-muted);
+  letter-spacing: 0.65px;
+  color: var(--dc-text-muted);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--dc-border);
 }
 
+/* ── Liste des règles ── */
 .rules {
-  background: var(--bg-secondary);
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  background: var(--dc-surface);
+  border-radius: var(--dc-radius-md);
   overflow: hidden;
-  margin-bottom: 18px;
-  text-align: left;
+  margin-bottom: 20px;
 }
 
 .rule {
-  padding: 13px 15px;
-  display: flex;
-  gap: 11px;
-  align-items: flex-start;
-  transition: background 0.15s;
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px;
+  transition: background 0.1s;
+  position: relative;
 }
-.rule:not(:last-child) {
-  border-bottom: 1px solid var(--border);
+.rule:not(:last-child)::after {
+  content: '';
+  position: absolute; bottom: 0; left: 14px; right: 14px;
+  height: 1px; background: var(--dc-border);
 }
 .rule:hover { background: rgba(255,255,255,0.02); }
 
-.rule-num {
-  flex-shrink: 0;
-  width: 24px; height: 24px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #5865F2, #8b5cf6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 800;
-  color: white;
-  margin-top: 1px;
+/* Icône ronde de règle */
+.rule-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(88,101,242,0.15);
+  border: 1px solid rgba(88,101,242,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0; margin-top: 1px;
 }
 
-.rule-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
+.rule-body {}
+.rule-name {
+  font-size: 14px; font-weight: 600;
+  color: var(--dc-header-primary);
   margin-bottom: 2px;
+  display: flex; align-items: center; gap: 6px;
 }
-.rule-text {
-  font-size: 13px;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 0 0 18px;
-}
-
-.btn {
-  width: 100%;
-  padding: 13px;
-  border: none;
-  border-radius: 12px;
-  background: var(--blurple);
-  color: white;
-  font-size: 15px;
-  font-family: 'Nunito', sans-serif;
-  cursor: pointer;
-  font-weight: 700;
-  transition: filter 0.15s, transform 0.1s, box-shadow 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.rule-badge {
+  font-size: 10px; font-weight: 700;
+  color: var(--dc-text-muted);
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px; padding: 1px 5px;
   letter-spacing: 0.2px;
 }
-.btn:hover:not(:disabled) { filter: brightness(1.1); }
-.btn:active:not(:disabled) { transform: scale(0.98); }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.btn.success {
-  background: var(--green);
-  box-shadow: 0 0 24px var(--green-glow);
+.rule-desc {
+  font-size: 13px;
+  color: var(--dc-text-muted);
+  line-height: 1.4;
 }
 
+/* ── Description invitation ── */
+.invite-desc {
+  font-size: 14px;
+  color: var(--dc-header-secondary);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+/* ── Bouton — EXACTEMENT Discord ── */
+.btn {
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--dc-radius-sm); /* Discord = border-radius 3px */
+  background: var(--dc-blurple);
+  color: #fff;
+  font-family: var(--dc-font);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background 0.17s ease;
+  position: relative; overflow: hidden;
+  user-select: none;
+  letter-spacing: 0.2px;
+}
+.btn:hover:not(:disabled)  { background: var(--dc-blurple-hover); }
+.btn:active:not(:disabled) { background: var(--dc-blurple-active); }
+.btn:disabled { cursor: not-allowed; opacity: 0.5; }
+
+.btn.green         { background: var(--dc-green); }
+.btn.green:hover   { background: var(--dc-green-hover); }
+
+/* Spinner */
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinner {
-  width: 15px; height: 15px;
-  border: 2px solid rgba(255,255,255,0.25);
-  border-top-color: white;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  display: none;
-  flex-shrink: 0;
+  animation: spin .65s linear infinite;
+  flex-shrink: 0; display: none;
 }
 .btn.loading .spinner { display: block; }
 
+/* ── Lien "Se connecter avec Discord" (style secondaire) ── */
+.btn-secondary {
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--dc-radius-sm);
+  background: var(--dc-blurple);
+  color: #fff;
+  font-family: var(--dc-font);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: background 0.17s;
+  user-select: none;
+}
+.btn-secondary:hover  { background: var(--dc-blurple-hover); }
+.btn-secondary:active { background: var(--dc-blurple-active); }
+
+/* Logo Discord en SVG inline */
+.dc-logo {
+  width: 20px; height: 20px; flex-shrink: 0;
+  fill: #fff;
+}
+
+/* ── Status text ── */
 .status {
-  margin-top: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  min-height: 20px;
-  color: var(--text-muted);
-  transition: color 0.2s;
+  margin-top: 10px;
+  font-size: 12px; font-weight: 500;
+  color: var(--dc-text-muted);
+  min-height: 18px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 5px; text-align: center; line-height: 1.4;
+  transition: color .2s;
 }
-.status.success { color: var(--green); }
-.status.error   { color: var(--red); }
+.status.ok  { color: var(--dc-green); }
+.status.err { color: var(--dc-red); }
 
-.footer {
-  margin-top: 14px;
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.6;
+/* ── Footer modal ── */
+.modal-footer {
+  background: var(--dc-surface);
+  border-top: 1px solid var(--dc-border);
+  padding: 10px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
 }
-.footer a {
-  color: var(--text-link);
-  text-decoration: none;
+.footer-note {
+  font-size: 12px; color: var(--dc-text-muted); line-height: 1.4;
 }
-.footer a:hover { text-decoration: underline; }
+.footer-link {
+  font-size: 12px; font-weight: 600;
+  color: var(--dc-text-link);
+  text-decoration: none; white-space: nowrap; flex-shrink: 0;
+}
+.footer-link:hover { text-decoration: underline; }
 
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 20px; left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  opacity: 0;
+  background: var(--dc-surface);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--dc-radius-md);
+  padding: 10px 16px;
+  font-size: 14px; font-weight: 600;
+  color: var(--dc-header-primary);
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 100; white-space: nowrap; pointer-events: none;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
 </style>
 </head>
 <body>
 
-<div class="card">
+<div class="bg">
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+</div>
 
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span>🎉</span><span id="toastMsg">Rôle attribué !</span>
+</div>
+
+<!-- Modal principale -->
+<div class="modal">
+
+  <!-- Bannière -->
   <div class="banner"></div>
 
-  <div class="avatar-wrap">
-    <div class="avatar">B</div>
-  </div>
+  <!-- En-tête serveur -->
+  <div class="server-header">
+    <div class="icon-row">
+      <div class="server-icon">B</div>
+    </div>
 
-  <div class="body">
+    <div class="community-badge">
+      <!-- Icône bouclier Discord communautaire -->
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+      </svg>
+      Serveur communautaire
+    </div>
 
     <div class="server-name">BlocPlay</div>
-    <div class="server-tag">Serveur officiel</div>
 
-    <div class="rules-header">
-      <span>📋</span>
-      <span>Règles du serveur</span>
+    <div class="member-stats">
+      <div class="stat">
+        <div class="stat-dot online"></div>
+        <span>En ligne</span>
+      </div>
+      <div class="stat">
+        <div class="stat-dot offline"></div>
+        <span>Membres</span>
+      </div>
     </div>
+  </div>
+
+  <div class="dc-sep"></div>
+
+  <!-- Corps -->
+  <div class="modal-body">
+
+    <p class="invite-desc">
+      Accepte les règles du serveur pour obtenir accès aux salons et rejoindre la communauté.
+    </p>
+
+    <div class="section-title">Règles du serveur</div>
 
     <div class="rules">
+
       <div class="rule">
-        <div class="rule-num">1</div>
-        <div>
-          <div class="rule-title">Mentions</div>
-          <div class="rule-text">Les mentions @everyone, @here ou autres sont interdites sur ce serveur.</div>
+        <div class="rule-avatar">🔔</div>
+        <div class="rule-body">
+          <div class="rule-name">
+            Mentions
+            <span class="rule-badge">Règle 1</span>
+          </div>
+          <div class="rule-desc">Les mentions @everyone, @here ou d'autres membres sont interdites sur ce serveur.</div>
         </div>
       </div>
+
       <div class="rule">
-        <div class="rule-num">2</div>
-        <div>
-          <div class="rule-title">Publicité</div>
-          <div class="rule-text">Toute publicité pour un site, bot, application, serveur ou jeu est strictement interdite.</div>
+        <div class="rule-avatar">🚫</div>
+        <div class="rule-body">
+          <div class="rule-name">
+            Publicité
+            <span class="rule-badge">Règle 2</span>
+          </div>
+          <div class="rule-desc">Toute publicité pour un site, bot, application, serveur ou jeu est strictement interdite.</div>
         </div>
       </div>
+
     </div>
 
-    <div class="divider"></div>
-
+    <!-- Bouton principal -->
     <button class="btn" id="mainBtn">
-      <div class="spinner"></div>
+      <div class="spinner" id="spinner"></div>
       <span id="btnText">Vérification…</span>
     </button>
 
     <div class="status" id="status"></div>
 
-    <div class="footer">
-      En acceptant, vous confirmez avoir lu et compris les règles.<br>
-      Besoin d'aide ? <a href="#">Contactez un modérateur</a>.
-    </div>
-
   </div>
+
+  <!-- Footer -->
+  <div class="modal-footer">
+    <span class="footer-note">En acceptant, vous confirmez avoir lu et compris les règles.</span>
+    <a class="footer-link" href="#">Aide</a>
+  </div>
+
 </div>
 
 <script>
-
-// ─── CONFIG ─────────────────────────────────────────────────────────
+// ── CONFIG ────────────────────────────────────
 const CLIENT_ID    = "1471824801088802879";
 const REDIRECT_URI = "https://bp-discord.github.io/blocplay/server/rules/accept/";
-const WORKER_URL   = "https://dark-surf-f7f5.mathisb11.workers.dev/"; // ← à remplacer
+const WORKER_URL   = "https://dark-surf-f7f5.mathisb11.workers.dev";
 const INVITE       = "https://discord.gg/45P7g8MTvn";
-// ────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────
 
-const params = new URLSearchParams(window.location.search);
-const code   = params.get("code");
-const btn    = document.getElementById("mainBtn");
-const btnTxt = document.getElementById("btnText");
-const status = document.getElementById("status");
+const params  = new URLSearchParams(window.location.search);
+const code    = params.get("code");
+const btn     = document.getElementById("mainBtn");
+const btnText = document.getElementById("btnText");
+const spinner = document.getElementById("spinner");
+const statusEl= document.getElementById("status");
+const toast   = document.getElementById("toast");
 
-function setText(t)    { btnTxt.textContent = t; }
-function setLoad(v)    { btn.classList.toggle("loading", v); btn.disabled = v; }
-function setStatus(msg, type="") {
-  status.textContent = msg;
-  status.className   = "status " + type;
+function setText(t)  { btnText.textContent = t; }
+function setLoad(v)  { btn.disabled = v; spinner.style.display = v ? "block" : "none"; }
+function setStatus(msg, cls = "") {
+  statusEl.textContent = msg;
+  statusEl.className   = "status " + cls;
+}
+function showToast(msg) {
+  document.getElementById("toastMsg").textContent = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
+/* ── Pas connecté ── */
 if (!code) {
 
-  setText("🔐 Se connecter avec Discord");
-  setStatus("Connexion requise pour accéder au serveur.");
+  setText("Se connecter avec Discord");
+  setStatus("Une connexion Discord est requise pour continuer.");
+
+  // Ajouter le logo Discord dans le bouton
+  const logo = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  logo.setAttribute("class", "dc-logo");
+  logo.setAttribute("viewBox", "0 0 24 24");
+  logo.innerHTML = '<path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>';
+  btn.insertBefore(logo, btnText);
 
   btn.onclick = () => {
     window.location.href =
@@ -377,10 +584,11 @@ if (!code) {
       `&scope=identify%20guilds.join`;
   };
 
+/* ── Connecté ── */
 } else {
 
-  setText("✅ Accepter les règles");
-  setStatus("✔ Compte Discord connecté", "success");
+  setText("Accepter les règles");
+  setStatus("✔ Compte Discord connecté", "ok");
 
   btn.onclick = async () => {
     setLoad(true);
@@ -396,24 +604,24 @@ if (!code) {
       const data = await res.json();
 
       if (data.success) {
-        btn.classList.add("success");
-        setText("🎉 Bienvenue sur BlocPlay !");
-        setStatus("Rôle attribué — redirection en cours…", "success");
+        btn.classList.add("green");
+        setText("Rôle attribué !");
+        setStatus("Bienvenue sur BlocPlay — redirection…", "ok");
+        showToast("🎉 Rôle attribué avec succès !");
         window.history.replaceState({}, "", window.location.pathname);
-        setTimeout(() => { window.location.href = INVITE; }, 1800);
+        setTimeout(() => { window.location.href = INVITE; }, 2000);
       } else {
         throw new Error(data.error || "Erreur inconnue");
       }
 
     } catch (err) {
       setLoad(false);
-      setText("✅ Accepter les règles");
-      setStatus("❌ " + err.message, "error");
+      setText("Réessayer");
+      setStatus("❌ " + err.message, "err");
+      setTimeout(() => { setText("Accepter les règles"); setStatus("✔ Compte connecté","ok"); }, 4000);
     }
   };
-
 }
-
 </script>
 </body>
 </html>
