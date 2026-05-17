@@ -3,129 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>BlocPlay • Acceptation</title>
 
 <style>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 body{
-    background:#313338;
-    font-family:Arial,sans-serif;
-    color:white;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-}
-
-.bg{
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:
-    radial-gradient(circle at top left,#5865F230,transparent 30%),
-    radial-gradient(circle at bottom right,#5865F220,transparent 30%);
+background:#313338;
+font-family:Arial,sans-serif;
+color:white;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
 }
 
 .card{
-    position:relative;
-    z-index:2;
-    width:95%;
-    max-width:520px;
-    background:#1e1f22;
-    border:1px solid #2b2d31;
-    border-radius:22px;
-    padding:35px;
-    box-shadow:0 0 30px rgba(0,0,0,0.4);
-    text-align:center;
+width:95%;
+max-width:520px;
+background:#1e1f22;
+border-radius:22px;
+padding:35px;
+text-align:center;
+box-shadow:0 0 30px rgba(0,0,0,.4);
 }
 
 .logo{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    margin:auto;
-    margin-bottom:20px;
-    background:#5865F2;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:42px;
-    font-weight:bold;
+width:90px;
+height:90px;
+border-radius:50%;
+background:#5865F2;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:42px;
+font-weight:bold;
+margin:auto;
+margin-bottom:20px;
 }
 
 h1{
-    font-size:30px;
-    margin-bottom:10px;
+font-size:30px;
+margin-bottom:10px;
 }
 
 .subtitle{
-    color:#b5bac1;
-    margin-bottom:30px;
-    line-height:1.5;
+color:#b5bac1;
+margin-bottom:25px;
+line-height:1.5;
 }
 
 .rules{
-    background:#2b2d31;
-    border-radius:16px;
-    padding:18px;
-    text-align:left;
-    margin-bottom:25px;
+background:#2b2d31;
+border-radius:16px;
+padding:18px;
+text-align:left;
+margin-bottom:25px;
 }
 
 .rule{
-    margin-bottom:18px;
+margin-bottom:18px;
 }
 
 .rule:last-child{
-    margin-bottom:0;
+margin-bottom:0;
 }
 
 .rule-title{
-    font-weight:bold;
-    margin-bottom:6px;
+font-weight:bold;
+margin-bottom:6px;
 }
 
 .rule-text{
-    color:#b5bac1;
-    line-height:1.5;
+color:#b5bac1;
+line-height:1.5;
 }
 
 button{
-    width:100%;
-    padding:16px;
-    border:none;
-    border-radius:14px;
-    background:#5865F2;
-    color:white;
-    font-size:17px;
-    cursor:pointer;
-    transition:0.2s;
-    font-weight:bold;
+width:100%;
+padding:16px;
+border:none;
+border-radius:14px;
+background:#5865F2;
+color:white;
+font-size:17px;
+cursor:pointer;
+font-weight:bold;
+transition:.2s;
 }
 
 button:hover{
-    background:#4752c4;
-    transform:scale(1.02);
+background:#4752c4;
 }
 
 .status{
-    margin-top:18px;
-    color:#43b581;
-    font-size:15px;
+margin-top:18px;
+color:#43b581;
+font-size:15px;
 }
 </style>
 </head>
 
 <body>
-
-<div class="bg"></div>
 
 <div class="card">
 
@@ -155,12 +138,12 @@ Advertising for a website, bot, application, server, game or other things is pro
 
 </div>
 
-<button id="acceptBtn">
-✅ Accepter les règles
+<button id="mainBtn">
+Connexion Discord...
 </button>
 
-<div class="status">
-✔ Serveur BlocPlay détecté
+<div class="status" id="status">
+Vérification...
 </div>
 
 </div>
@@ -172,6 +155,26 @@ const clientId = "1471824801088802879";
 const redirectUri =
 "https://bp-discord.github.io/blocplay/server/rules/accept/";
 
+const invite =
+"https://discord.gg/45P7g8MTvn";
+
+const params = new URLSearchParams(window.location.search);
+
+const code = params.get("code");
+
+const btn = document.getElementById("mainBtn");
+
+const status = document.getElementById("status");
+
+// ✅ SI PAS CONNECTÉ
+if(!code){
+
+btn.innerText = "🔐 Se connecter avec Discord";
+
+status.innerText = "Connexion requise";
+
+btn.onclick = () => {
+
 const loginUrl =
 `https://discord.com/oauth2/authorize?client_id=${clientId}` +
 `&response_type=code` +
@@ -179,6 +182,33 @@ const loginUrl =
 `&scope=identify%20guilds`;
 
 window.location.href = loginUrl;
+
+};
+
+}
+
+// ✅ SI CONNECTÉ
+else{
+
+status.innerText = "✔ Compte Discord connecté";
+
+btn.innerText = "✅ Accepter les règles";
+
+btn.onclick = () => {
+
+btn.innerText = "✔ Règles acceptées";
+
+btn.style.background = "#43b581";
+
+setTimeout(() => {
+
+window.location.href = invite;
+
+},1200);
+
+};
+
+}
 
 </script>
 
