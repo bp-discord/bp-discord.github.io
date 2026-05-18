@@ -115,15 +115,27 @@ body {
 .server-icon {
   width:80px; height:80px; border-radius:50%;
   border:6px solid var(--dc-bg-primary);
-  background: linear-gradient(135deg, #5865f2 0%, #8040e0 100%);
+  background: var(--dc-bg-secondary);
   display:flex; align-items:center; justify-content:center;
-  font-size:34px; font-weight:700; color:#fff;
-  flex-shrink:0; position:relative; user-select:none; letter-spacing:-1px;
+  flex-shrink:0; position:relative; overflow:hidden;
 }
+.server-icon img {
+  width:100%; height:100%; object-fit:cover; border-radius:50%;
+}
+/* Fallback letter if image fails */
+.server-icon .fallback {
+  font-size:34px; font-weight:700; color:#fff;
+  position:absolute;
+  display:none;
+}
+.server-icon img.error + .fallback { display:flex; }
+
+/* Online dot */
 .server-icon::after {
   content:''; position:absolute; bottom:4px; right:4px;
   width:14px; height:14px; border-radius:50%;
   background:var(--dc-green); border:3px solid var(--dc-bg-primary);
+  z-index:2;
 }
 
 /* Gaming badge */
@@ -214,11 +226,10 @@ body {
 }
 .rule-text { font-size:13px; color:var(--dc-text-muted); line-height:1.45; }
 
-/* ── BUTTON — Discord exact: border-radius 16px (pill-ish mais pas full pill) ── */
+/* Button — Discord border-radius 16px */
 .btn {
   width:100%; height:44px; padding:0 16px;
-  border:none;
-  border-radius:16px;
+  border:none; border-radius:16px;
   background:var(--dc-blurple); color:#fff;
   font-family:var(--dc-font); font-size:16px; font-weight:500;
   cursor:pointer; letter-spacing:.2px;
@@ -232,16 +243,13 @@ body {
 .btn.success               { background:var(--dc-green); }
 .btn.success:hover         { background:var(--dc-green-hover); }
 
-/* Discord logo */
 .dc-logo { width:20px; height:20px; fill:#fff; flex-shrink:0; }
 
-/* Spinner */
 @keyframes spin { to { transform:rotate(360deg); } }
 .spinner {
   width:16px; height:16px;
   border:2px solid rgba(255,255,255,.3);
-  border-top-color:#fff;
-  border-radius:50%;
+  border-top-color:#fff; border-radius:50%;
   animation:spin .65s linear infinite;
   flex-shrink:0; display:none;
 }
@@ -298,14 +306,8 @@ body {
   cursor:pointer; outline:none;
   transition:border-color .15s, background .15s;
 }
-.lang-select:hover {
-  background:rgba(255,255,255,.06);
-  border-color:rgba(255,255,255,.2);
-}
-.lang-select:focus {
-  border-color:var(--dc-blurple);
-  box-shadow:0 0 0 2px rgba(88,101,242,.35);
-}
+.lang-select:hover { background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.2); }
+.lang-select:focus { border-color:var(--dc-blurple); box-shadow:0 0 0 2px rgba(88,101,242,.35); }
 .lang-select option { background:var(--dc-bg-secondary); color:var(--dc-text-normal); }
 .chevron-icon {
   position:absolute; right:9px; top:50%; transform:translateY(-50%);
@@ -338,7 +340,10 @@ body {
 <div class="bg-glow bg-glow-1"></div>
 <div class="bg-glow bg-glow-2"></div>
 
-<div class="toast" id="toast"><span>🎉</span><span id="toastMsg"></span></div>
+<!-- Toast — emoji uniquement ici, pas dans le message -->
+<div class="toast" id="toast">
+  <span>🎉</span><span id="toastMsg"></span>
+</div>
 
 <div class="modal-wrap">
 <div class="modal">
@@ -347,7 +352,14 @@ body {
 
   <div class="server-top">
     <div class="icon-row">
-      <div class="server-icon">B</div>
+      <div class="server-icon">
+        <img
+          src="/blocplay/blocplay.png"
+          alt="BlocPlay"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        >
+        <span class="fallback">B</span>
+      </div>
     </div>
     <div class="gaming-badge">🎮 <span id="txt-community">Gaming Server</span></div>
     <div class="server-name">BlocPlay</div>
@@ -391,13 +403,12 @@ body {
 
   <div class="modal-footer">
     <span class="footer-note" id="txt-footer">By accepting, you confirm you have read and understood the rules.</span>
-    <a class="footer-link" href="#" id="txt-help">Help</a>
+    <a class="footer-link" href="mailto:blocplaystudios@gmail.com" id="txt-help">Help</a>
   </div>
 
 </div>
 </div>
 
-<!-- Language picker -->
 <div class="lang-bar">
   <div class="lang-select-wrap">
     <span class="globe-icon">
@@ -501,10 +512,11 @@ const langSel  = document.getElementById("langSelect");
 let lang = "en";
 let done = false;
 
-function t(k)    { return T[lang][k] || T.en[k]; }
+function t(k)       { return T[lang][k] || T.en[k]; }
 function setText(s) { btnText.textContent = s; }
-function setLoad(v)  { btn.disabled = v; spinner.style.display = v ? "block" : "none"; }
+function setLoad(v) { btn.disabled = v; spinner.style.display = v ? "block" : "none"; }
 function setStatus(msg, cls="") { statusEl.textContent = msg; statusEl.className = "status "+cls; }
+
 function showToast(msg) {
   document.getElementById("toastMsg").textContent = msg;
   toast.classList.add("show");
@@ -555,7 +567,7 @@ if (!code) {
         done = true;
         btn.classList.add("success");
         setText(t("btnSuccess")); setStatus(t("statusSuccess"), "ok");
-        showToast("🎉 " + t("toastSuccess"));
+        showToast(t("toastSuccess")); // pas de 🎉 ici, il est déjà dans le HTML du toast
         window.history.replaceState({}, "", window.location.pathname);
         setTimeout(() => { window.location.href = INVITE; }, 2000);
       } else { throw new Error(data.error || "Unknown error"); }
@@ -567,7 +579,6 @@ if (!code) {
 }
 
 langSel.addEventListener("change", () => applyLang(langSel.value));
-
 const bl = (navigator.language || "en").slice(0,2).toLowerCase();
 if (T[bl]) { langSel.value = bl; applyLang(bl); } else { applyLang("en"); }
 
