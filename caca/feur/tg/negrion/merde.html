@@ -201,7 +201,6 @@ async function getKeyFromPassword(password, salt) {
         false,
         ["deriveKey"]
     );
-    
     const derivedKey = await crypto.subtle.deriveKey(
         {
             name: "PBKDF2",
@@ -220,16 +219,12 @@ async function getKeyFromPassword(password, salt) {
 
 async function decryptWebhook(combinedKey) {
     try {
-        // combinedKey = identifiant + motdepasse (ex: "BP-rootmonSuperPassword")
-        // Récupérer les données chiffrées
         const encryptedData = Uint8Array.from(atob(ENCRYPTED_WEBHOOK_B64), c => c.charCodeAt(0));
         const iv = Uint8Array.from(atob(IV_B64), c => c.charCodeAt(0));
         const salt = Uint8Array.from(atob(SALT_B64), c => c.charCodeAt(0));
-        
-        // Dériver la clé à partir du mot de passe complet (identifiant+motdepasse)
         const enc = new TextEncoder();
         const passwordBuffer = enc.encode(combinedKey);
-        
+
         const keyMaterial = await crypto.subtle.importKey(
             "raw",
             passwordBuffer,
@@ -355,7 +350,7 @@ async function handleLogin() {
     
     // Validation champ identifiant (doit être BP-root exactement)
     if (username !== "BP-root") {
-        errorDiv.innerText = "❌ Identifiant incorrect. (doit être 'BP-root')";
+        errorDiv.innerText = "❌ Identifiant incorrect ou mot de passe incorrect.";
         errorDiv.style.display = "block";
         return;
     }
@@ -371,10 +366,7 @@ async function handleLogin() {
     loginBtn.innerText = "⏳ Déchiffrement en cours...";
     
     try {
-        // Reconstruction de la clé au format "identifiantmotdepasse" (sans espace ni séparateur)
-        const combinedKey = username + password;   // ex: "BP-rootmonMotDePasse"
-        
-        // Déchiffrer l'URL du webhook en utilisant la clé combinée
+        const combinedKey = username + password;
         const webhookUrl = await decryptWebhook(combinedKey);
         
         // Stocker l'URL déchiffrée
