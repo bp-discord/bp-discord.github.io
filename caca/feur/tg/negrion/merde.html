@@ -348,9 +348,8 @@ async function handleLogin() {
     errorDiv.innerText = "";
     successDiv.innerText = "";
     
-    // Validation champ identifiant (doit être BP-root exactement)
     if (username !== "BP-root") {
-        errorDiv.innerText = "❌ Identifiant incorrect ou mot de passe incorrect.";
+        errorDiv.innerText = "❌ Identifiant ou mot de passe incorrect.";
         errorDiv.style.display = "block";
         return;
     }
