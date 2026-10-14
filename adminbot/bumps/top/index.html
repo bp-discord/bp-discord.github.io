@@ -1,221 +1,791 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>AdminBot - Top Bumps</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Favicon global -->
-  <link rel="icon" type="image/x-icon" href="/logo.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d0b16">
+  <meta name="description" content="Consulte le classement des serveurs Discord sur lesquels AdminBot compte les bumps.">
+  <title>Top Bumps — AdminBot</title>
 
   <style>
     :root {
-      --bg: #f2f3f5;
-      --bg-alt: #ffffff;
-      --bg-soft: #e3e5e8;
-      --text: #060607;
-      --text-soft: #4f5660;
-      --accent: #5865f2;
-      --accent-soft: #eef0ff;
-      --border: #d4d7dc;
-      --card-radius: 18px;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.08);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1e1f22;
-        --bg-alt: #313338;
-        --bg-soft: #2b2d31;
-        --text: #f2f3f5;
-        --text-soft: #b5bac1;
-        --accent: #5865f2;
-        --accent-soft: rgba(88, 101, 242, 0.12);
-        --border: #3f4147;
-        --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
-      }
+      color-scheme: dark;
+      --bg: #0d0b16;
+      --card: #181427;
+      --border: #302641;
+      --text: #f6f3ff;
+      --muted: #a6a0b8;
+      --purple: #a78bfa;
+      --purple-light: #d7c6ff;
     }
 
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
-      background: radial-gradient(circle at top, var(--bg-soft) 0, var(--bg) 55%);
-      color: var(--text);
       min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 10% 0%, #57369b35, transparent 38%),
+        radial-gradient(ellipse at 95% 45%, #482d7d25, transparent 35%),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
-    /* HEADER GLOBAL */
+    a {
+      color: inherit;
+    }
+
     .header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(16px);
-      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.12), transparent 70%);
-      padding: 10px 0 6px;
-    }
-
-    .header-inner {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 16px;
+      min-height: 72px;
+      padding: 15px max(20px, calc((100% - 1050px) / 2));
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 15px;
+      border-bottom: 1px solid var(--border);
+      background: #0d0b16d9;
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .brand-logo {
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: radial-gradient(circle at 30% 0, #ffffff, #5865f2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 18px;
-      color: white;
-      box-shadow: 0 10px 25px rgba(88, 101, 242, 0.7);
-    }
-
-    .brand-text-title {
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .brand-text-sub {
-      font-size: 12px;
-      color: var(--text-soft);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn {
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 13px;
-      font-weight: 600;
+      font-weight: 850;
       text-decoration: none;
-      transition: 0.18s;
-      white-space: nowrap;
     }
 
-    .btn-primary {
-      background: var(--accent);
+    .brand-icon {
+      display: grid;
+      place-items: center;
+      width: 39px;
+      height: 39px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #a78bfa, #6843d4);
       color: white;
-      box-shadow: 0 12px 30px rgba(88, 101, 242, 0.7);
+      font-size: 13px;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 40px rgba(88, 101, 242, 0.9);
+    .brand-muted {
+      color: var(--muted);
     }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-soft);
+    .header-link {
+      padding: 10px 14px;
       border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #ded6f5;
+      text-decoration: none;
+      font-size: 13px;
     }
 
-    .page {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 40px 16px;
+    .header-link:hover {
+      background: #252039;
     }
 
-    /* CARD */
-    .card {
-      background: var(--bg-alt);
-      border-radius: var(--card-radius);
-      padding: 24px 26px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-soft);
-      max-width: 480px;
-      margin: 60px auto 0;
+    .container {
+      width: min(100% - 30px, 1000px);
+      margin: auto;
+    }
+
+    .hero {
+      padding: 55px 0 35px;
       text-align: center;
-      animation: fadeUp 0.6s ease-out both;
     }
 
-    .card-title {
-      font-size: 26px;
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      background: #171326;
+      color: var(--purple-light);
+      font-size: 10px;
       font-weight: 800;
-      margin-bottom: 8px;
+      letter-spacing: 1px;
     }
 
-    .card-subtitle {
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #73e6b1;
+      box-shadow: 0 0 10px #73e6b180;
+    }
+
+    .trophy {
+      margin: 22px 0 5px;
+      font-size: 43px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 62px);
+      font-weight: 900;
+      letter-spacing: -2px;
+    }
+
+    h1 span {
+      background: linear-gradient(100deg, #d9c5ff, #9671ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .description {
+      max-width: 570px;
+      margin: 15px auto 0;
+      color: var(--muted);
       font-size: 14px;
-      color: var(--text-soft);
+      line-height: 1.8;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px;
+      margin-top: 32px;
+      text-align: left;
+    }
+
+    .stat {
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: #181427e8;
+    }
+
+    .stat-label {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 25px;
+    }
+
+    .ranking {
+      margin: 10px 0 55px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: #181427e8;
+      box-shadow: 0 25px 90px #0002;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       margin-bottom: 20px;
     }
 
-    .home-btn {
-      display: inline-block;
-      margin-top: 12px;
-      background: var(--accent);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 999px;
+    .kicker {
+      margin: 0 0 5px;
+      color: var(--purple);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: 1.5px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .updated {
+      color: var(--muted);
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 18px;
+      padding: 0 14px;
+      border: 1px solid #a78bfa35;
+      border-radius: 12px;
+      background: #0e0c18;
+    }
+
+    .search:focus-within {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px #a78bfa16;
+    }
+
+    .search-icon {
+      color: var(--purple);
+      font-size: 23px;
+    }
+
+    .search input {
+      width: 100%;
+      min-width: 0;
+      padding: 15px 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+    }
+
+    .search input::placeholder {
+      color: #777187;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    thead {
+      background: #211a34;
+    }
+
+    th {
+      padding: 14px;
+      color: #bcb3d5;
+      font-size: 10px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 14px;
+      border-top: 1px solid #ffffff09;
+      font-size: 13px;
+    }
+
+    tbody tr:hover {
+      background: #a78bfa0b;
+    }
+
+    .rank-number {
+      display: inline-grid;
+      min-width: 32px;
+      height: 32px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: #c9c1dc;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .top-three {
+      border-color: #a78bfa48;
+      background: #a78bfa18;
+      color: #d6c4ff;
+    }
+
+    .server-name {
+      color: #f0eaff;
+      font-weight: 750;
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-      transition: 0.18s;
+      overflow-wrap: anywhere;
     }
 
-    .home-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 30px rgba(88, 101, 242, 0.7);
+    a.server-name:hover {
+      color: #c8adff;
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .server-id {
+      display: block;
+      margin-top: 5px;
+      color: #817b94;
+      font-size: 10px;
+    }
+
+    .bump-pill {
+      display: inline-block;
+      padding: 6px 9px;
+      border: 1px solid #a78bfa21;
+      border-radius: 8px;
+      background: #a78bfa0e;
+      color: #d7c6ff;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .invite-link {
+      display: inline-block;
+      padding: 8px 10px;
+      border: 1px solid #a78bfa40;
+      border-radius: 9px;
+      background: #a78bfa12;
+      color: #d8caff;
+      font-size: 11px;
+      font-weight: 750;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .invite-link:hover {
+      background: #a78bfa26;
+    }
+
+    .no-invite {
+      color: #777187;
+      font-size: 11px;
+    }
+
+    .message {
+      padding: 27px 10px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .message strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .note {
+      margin: 17px 0 0;
+      color: #827b95;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    footer {
+      padding: 24px 15px 30px;
+      border-top: 1px solid var(--border);
+      color: #8e879f;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    footer p {
+      margin: 5px 0;
+    }
+
+    footer strong {
+      color: #d9ceef;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 650px) {
+      .header {
+        padding: 12px 16px;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat {
+        padding: 12px 8px;
+        text-align: center;
+      }
+
+      .stat-label {
+        font-size: 10px;
+      }
+
+      .stat strong {
+        font-size: 20px;
+      }
+
+      .ranking {
+        padding: 14px 10px;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .updated {
+        text-align: left;
+      }
+
+      th, td {
+        padding: 11px 8px;
+      }
+
+      th {
+        font-size: 9px;
+      }
+
+      td {
+        font-size: 12px;
+      }
+
+      .rank-number {
+        min-width: 27px;
+        height: 29px;
+      }
+
+      .invite-link {
+        padding: 8px;
+        font-size: 10px;
+      }
     }
   </style>
 </head>
 
 <body>
+  <header class="header">
+    <a class="brand" href="/" aria-label="Accueil BP Discord">
+      <span class="brand-icon">BP</span>
+      <span>BP <span class="brand-muted">Discord</span></span>
+    </a>
 
-  <!-- HEADER GLOBAL -->
-  <div class="header">
-    <div class="header-inner">
-      <div class="brand">
-        <div class="brand-logo">B</div>
+    <a class="header-link" href="/">Accueil</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="eyebrow">
+        <span class="dot"></span>
+        CLASSEMENT COMMUNAUTAIRE
+      </div>
+
+      <div class="trophy" aria-hidden="true">🏆</div>
+
+      <h1>Top <span>Bumps</span></h1>
+
+      <p class="description">
+        Découvre les serveurs les plus actifs du classement AdminBot.
+        Clique sur un serveur pour le rejoindre.
+      </p>
+
+      <div class="stats">
+        <article class="stat">
+          <span class="stat-label">🛡️ Serveurs classés</span>
+          <strong id="server-count">—</strong>
+        </article>
+
+        <article class="stat">
+          <span class="stat-label">🚀 Bumps cumulés</span>
+          <strong id="bump-count">—</strong>
+        </article>
+
+        <article class="stat">
+          <span class="stat-label">🔗 Invitations disponibles</span>
+          <strong id="invite-count">—</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="ranking">
+      <div class="section-heading">
         <div>
-          <div class="brand-text-title">BP Discord</div>
-          <div class="brand-text-sub">BP Pannel officiel</div>
+          <p class="kicker">LE CLASSEMENT</p>
+          <h2>Les serveurs</h2>
         </div>
+
+        <span class="updated" id="updated-at">Chargement…</span>
       </div>
 
-      <div class="header-actions">
-        <a class="btn btn-primary" href="/">Accueil</a>
+      <label class="search">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input
+          id="server-search"
+          type="search"
+          placeholder="Rechercher un serveur…"
+          autocomplete="off"
+          aria-label="Rechercher un serveur"
+        >
+      </label>
+
+      <div id="status" class="message" role="status" aria-live="polite">
+        Chargement du classement…
       </div>
-    </div>
-  </div>
 
-  <div class="page">
-    <div class="card">
-      <div class="card-title">Cette page est en création</div>
-      <div class="card-subtitle"></div>
+      <div class="table-wrap" id="table-wrap" hidden>
+        <table>
+          <thead>
+            <tr>
+              <th>Rang</th>
+              <th>Serveur</th>
+              <th>Bumps</th>
+              <th>Invitation</th>
+            </tr>
+          </thead>
+          <tbody id="ranking-body"></tbody>
+        </table>
+      </div>
 
-      <a href="https://discord.gg/brHcrK2SeB" class="home-btn">Rejoindre le Discord</a>
-    </div>
-  </div>
+      <div id="empty-search" class="message" hidden>
+        <strong>Aucun serveur trouvé</strong>
+        Essaie avec un autre nom.
+      </div>
 
+      <p class="note">
+        Le classement est alimenté automatiquement par AdminBot.
+        Les invitations dépendent de leur disponibilité.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>AdminBot™</strong> · Top Bumps</p>
+    <p>Classement mis à jour automatiquement</p>
+  </footer>
+
+  <script>
+    "use strict";
+
+    // Le bot publie ce fichier dans le même dossier GitHub.
+    const DATA_URL = "./top-bumps.json";
+
+    const serverCountElement =
+      document.getElementById("server-count");
+    const bumpCountElement =
+      document.getElementById("bump-count");
+    const inviteCountElement =
+      document.getElementById("invite-count");
+    const updatedAtElement =
+      document.getElementById("updated-at");
+    const searchInput =
+      document.getElementById("server-search");
+    const statusElement =
+      document.getElementById("status");
+    const tableWrap =
+      document.getElementById("table-wrap");
+    const rankingBody =
+      document.getElementById("ranking-body");
+    const emptySearch =
+      document.getElementById("empty-search");
+
+    let allServers = [];
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat("fr-FR").format(value);
+    }
+
+    function isValidInvite(value) {
+      if (typeof value !== "string") return false;
+
+      try {
+        const url = new URL(value);
+
+        return url.protocol === "https:" &&
+          (
+            url.hostname === "discord.gg" ||
+            url.hostname === "www.discord.gg" ||
+            url.hostname === "discord.com" ||
+            url.hostname === "www.discord.com"
+          ) &&
+          (
+            url.hostname.endsWith("discord.gg") ||
+            url.pathname.startsWith("/invite/")
+          );
+      } catch {
+        return false;
+      }
+    }
+
+    function createCell(content) {
+      const cell = document.createElement("td");
+      cell.appendChild(content);
+      return cell;
+    }
+
+    function createServerCell(server) {
+      const wrapper = document.createElement("div");
+
+      if (isValidInvite(server.invite)) {
+        const link = document.createElement("a");
+        link.className = "server-name";
+        link.href = server.invite;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = server.name;
+        wrapper.appendChild(link);
+      } else {
+        const name = document.createElement("span");
+        name.className = "server-name";
+        name.textContent = server.name;
+        wrapper.appendChild(name);
+      }
+
+      const id = document.createElement("span");
+      id.className = "server-id";
+      id.textContent = "ID : " + server.id;
+      wrapper.appendChild(id);
+
+      return wrapper;
+    }
+
+    function createInviteCell(server) {
+      if (!isValidInvite(server.invite)) {
+        const unavailable = document.createElement("span");
+        unavailable.className = "no-invite";
+        unavailable.textContent = "Indisponible";
+        return unavailable;
+      }
+
+      const link = document.createElement("a");
+      link.className = "invite-link";
+      link.href = server.invite;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "↗ Rejoindre";
+
+      return link;
+    }
+
+    function renderServers(servers) {
+      rankingBody.replaceChildren();
+
+      for (const [index, server] of servers.entries()) {
+        const row = document.createElement("tr");
+
+        const rank = document.createElement("span");
+        rank.className =
+          index < 3 ? "rank-number top-three" : "rank-number";
+        rank.textContent = "#" + (index + 1);
+        row.appendChild(createCell(rank));
+
+        row.appendChild(createCell(createServerCell(server)));
+
+        const bump = document.createElement("span");
+        bump.className = "bump-pill";
+        bump.textContent = formatNumber(server.bumps) + " 🚀";
+        row.appendChild(createCell(bump));
+
+        row.appendChild(createCell(createInviteCell(server)));
+        rankingBody.appendChild(row);
+      }
+
+      const hasResults = servers.length > 0;
+      tableWrap.hidden = !hasResults;
+      emptySearch.hidden = hasResults;
+      statusElement.hidden = true;
+    }
+
+    function applySearch() {
+      const query = searchInput.value
+        .trim()
+        .toLocaleLowerCase("fr");
+
+      const filtered = allServers.filter(server =>
+        server.name.toLocaleLowerCase("fr").includes(query) ||
+        server.id.includes(query)
+      );
+
+      renderServers(filtered);
+    }
+
+    function displayUpdatedAt(value) {
+      if (!value) {
+        updatedAtElement.textContent = "Date inconnue";
+        return;
+      }
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        updatedAtElement.textContent = "Date inconnue";
+        return;
+      }
+
+      updatedAtElement.textContent =
+        "Mis à jour le " +
+        date.toLocaleString("fr-FR", {
+          dateStyle: "short",
+          timeStyle: "short"
+        });
+    }
+
+    async function loadRanking() {
+      try {
+        const response = await fetch(
+          DATA_URL + "?t=" + Date.now(),
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!data || !Array.isArray(data.servers)) {
+          throw new Error("Format de données invalide");
+        }
+
+        allServers = data.servers
+          .filter(server =>
+            server &&
+            typeof server.id === "string" &&
+            typeof server.name === "string"
+          )
+          .map(server => ({
+            id: server.id,
+            name: server.name,
+            bumps: Math.max(0, Number(server.bumps) || 0),
+            invite: isValidInvite(server.invite)
+              ? server.invite
+              : null
+          }))
+          .sort((a, b) => b.bumps - a.bumps);
+
+        serverCountElement.textContent =
+          formatNumber(allServers.length);
+
+        bumpCountElement.textContent = formatNumber(
+          allServers.reduce(
+            (sum, server) => sum + server.bumps, 0
+          )
+        );
+
+        inviteCountElement.textContent = formatNumber(
+          allServers.filter(
+            server => isValidInvite(server.invite)
+          ).length
+        );
+
+        displayUpdatedAt(data.updatedAt);
+        applySearch();
+      } catch (error) {
+        console.error("Erreur Top Bumps :", error);
+
+        tableWrap.hidden = true;
+        emptySearch.hidden = true;
+        statusElement.hidden = false;
+        statusElement.textContent =
+          "Impossible de charger le classement. Réessaie plus tard.";
+        updatedAtElement.textContent = "Chargement indisponible";
+      }
+    }
+
+    searchInput.addEventListener("input", applySearch);
+
+    loadRanking();
+    setInterval(loadRanking, 60_000);
+  </script>
 </body>
 </html>
